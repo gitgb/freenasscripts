@@ -180,7 +180,8 @@ echo "ls /mnt/$DESTPOOL/test/datas1 | /usr/bin/wc"
 ls /mnt/$DESTPOOL/test/datas1 | /usr/bin/wc
 echo "I think there were about 123 files under test, are there still?"
 /usr/bin/find /mnt/$DESTPOOL/test | /usr/bin/wc
-/sbin/zfs list -r $DESTPOOL
+echo 
+/sbin/zfs list -r -t snapshot -o creation,space $DESTPOOL $SRCPOOL
 cat <<eotext
 
 If there were problems, you can rollback to some date,
