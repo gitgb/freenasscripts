@@ -180,7 +180,7 @@ echo "ls /mnt/$DESTPOOL/test/datas1 | /usr/bin/wc"
 ls /mnt/$DESTPOOL/test/datas1 | /usr/bin/wc
 echo "I think there were about 123 files under test, are there still?"
 /usr/bin/find /mnt/$DESTPOOL/test | /usr/bin/wc
-echo 
+echo "Listing of snapshots we have:"
 /sbin/zfs list -r -t snapshot -o creation,space $DESTPOOL $SRCPOOL
 cat <<eotext
 

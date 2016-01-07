@@ -178,7 +178,8 @@ echo "You could ls -l FavoriteDirctory | wc ; and see how many files exist. Chan
 echo "Better be some ~30 below "
 echo "ls /mnt/$DESTPOOL/data/gb | /usr/bin/wc"
 ls /mnt/$DESTPOOL/data/gb | /usr/bin/wc
-/sbin/zfs list -r $DESTPOOL
+echo "Listing of snapshots we have:"
+/sbin/zfs list -r -t snapshot -o creation,space $DESTPOOL $SRCPOOL
 cat <<eotext
 
 If there were problems, you can rollback to some date,
