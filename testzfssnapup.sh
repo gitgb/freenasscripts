@@ -1,4 +1,4 @@
-﻿#!/bin/sh
+#!/bin/sh
 # 
 # FUNCTIONAL AREA OR ABSTRACT: (Shouldn't I use Perl ;>) 
 # 	To send file system snapshots to an offsite plugin disk for offsite storage.
@@ -118,14 +118,13 @@ then
 	errmsg "You must be root to do this! "
 fi
 
-# lets check if $1 is set to "update"
-if [ "$1" == "update" ]; then
+# lets check if $1 is set to "backup"
+if [ "$1" == "backup" ]; then
 	/sbin/zfs  destroy -r $SRCPOOL@${DESTPOOL}-backup.olddelete 
 fi
 
 # lets use a logfile for output
-exec 6>&1  # save std out on 6
-exec >> $LOGFILE     # stdout replaced with file
+exec 6>&1 >> $LOGFILE     # stdout replaced with file
 echo
 echo "*****************"
 echo "New run...."
@@ -166,7 +165,7 @@ echo "Sending the snapshot to $DESTPOOL"
 # send all snaps from  $SRCPOOL@${DESTPOOL}-backup1 to $SRCPOOL@${DESTPOOL}-backup2, Replicate all and be verbose
 # recv all snaps, Force roll back to most recent snap ( undo changes) and cleanup any un-included snaps.
 # strip off source pool name on receiving end, substitute destination pool name.
-/sbin/zfs send -v -e -R -I $SRCPOOL@${DESTPOOL}-backup1 $SRCPOOL@${DESTPOOL}-backup2 | zfs recv -v -d -F $DESTPOOL
+/sbin/zfs send  -e -R -I $SRCPOOL@${DESTPOOL}-backup1 $SRCPOOL@${DESTPOOL}-backup2 | zfs recv -v -d -F $DESTPOOL
 
 # error? don't delete then
 
@@ -192,6 +191,7 @@ cat <<eotext
 
 If there were problems, you can rollback to some date,
 # zfs rollback -r $SRCPOOL@${DESTPOOL}-backup.olddelete
+(unfortunately each descendant must be rolled back separately)
 or if it is the backup, recreate the backup, try again, eg:
 batch
 zfs send -R  $SRCPOOL@${DESTPOOL}-backup2 | zfs recv -d -v $DESTPOOL
@@ -200,7 +200,9 @@ eotext
 date
 
 # recover std out
-exec 1>&6 6>&−    
-/usr/bin/tail -n 256 $LOGFILE
+exec 1>&6  
+echo
+echo "Tail 350 lines of $LOGFILE :"
+/usr/bin/tail -n 350 $LOGFILE
 
 exit
