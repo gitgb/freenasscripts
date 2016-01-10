@@ -1,4 +1,4 @@
-#!/bin/sh
+﻿#!/bin/sh
 # 
 # FUNCTIONAL AREA OR ABSTRACT: (Shouldn't I use Perl ;>) 
 # 	To send file system snapshots to an offsite plugin disk for offsite storage.
@@ -118,7 +118,13 @@ then
 	errmsg "You must be root to do this! "
 fi
 
+# lets check if $1 is set to "update"
+if [ "$1" == "update" ]; then
+	/sbin/zfs  destroy -r $SRCPOOL@${DESTPOOL}-backup.olddelete 
+fi
+
 # lets use a logfile for output
+exec 6>&1  # save std out on 6
 exec >> $LOGFILE     # stdout replaced with file
 echo
 echo "*****************"
@@ -192,4 +198,9 @@ zfs send -R  $SRCPOOL@${DESTPOOL}-backup2 | zfs recv -d -v $DESTPOOL
 eotext
 
 date
+
+# recover std out
+exec 1>&6 6>&−    
+/usr/bin/tail -n 256 $LOGFILE
+
 exit
