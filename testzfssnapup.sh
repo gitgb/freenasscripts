@@ -1,7 +1,7 @@
 #!/bin/sh
 # 
 # FUNCTIONAL AREA OR ABSTRACT: (Shouldn't I use Perl ;>) 
-# 	To send file system snapshots to an offsite plugin disk for offsite storage.
+# 	To send file system snapshots to an offsite plugin disk(s) for offsite storage.
 #
 #	How it works is something like the following:
 #	
@@ -12,10 +12,13 @@
 #	email. As long as it senses that the off-site pool is attached, it under cron, will
 #	continue to try to make snapshots and update the on-site pool; but, it is blocked
 #	if a snapshot named @${DESTPOOL}-backup.olddelete is present. While present this
-#	causess emails every time this script tries to run to the effect that you should
+#	causes emails every time this script tries to run to the effect that you should
 #	get rid of this snapshot called @${DESTPOOL}-backup.olddelete. When it's finished all you
 #	have to do is dismount the off-site pool and bring it off-site until next time.
-#	It supports a list of one or more zpools; that way one pool can be on-site, the other off-stie. Then swap.
+#	Added the ability to run the script with a parameter "backup". This will delete the snapshot
+#	named @${DESTPOOL}-backup.olddelete, then send the snapshots to the backup pool, and display the last
+#	few lines of the log file, so you can check the run. Meant for just running the script.
+#	It supports a list of one or more zpools; that way one pool can be on-site, the other off-site. Then swap.
 #	This is good for the paranoid. 
 #	
 #	To prime/initialize (very important) : 
@@ -24,11 +27,13 @@
 #	the named snapshot. When received, all  properties,  snapshots,
 #	descendent file systems, and clones are preserved.
 #	So create that with something like:
-#	Note: sudo DOES NOT work across pipes '|' so sudo -s or su first, then try:
+#	Note: sudo DOES NOT work across pipes '|' so sudo -s or su first, then try it:
 #   First make a recursive snapshot named appropriately: 
 #		zfs snapshot -r mypool/test@offsite-backup2
-#	This snapshots mypool/test and names it offsite-backup2, so one of the backup zpools should be
-#	named "offsite". the "-backup2"  part makes it ready to participate in this scripts naming conventions.
+#	This snapshots mypool/test and names it offsite-backup2, so one of the backup zpools would have
+#	the name "offsite". The "-backup2"  part makes it ready to participate in this scripts naming conventions.
+#	The latest snapshot is named something like "@offsite-backup2", the previous one, "@offsite-backup1",
+#	and the oldest named "@offsite-backup.olddelete".
 # 	Now batch send the replication stream for the whole dataset:
 #		batch
 #		zfs send -e -R mypool/test@offsite-backup2 | zfs recv -d -v offsite
@@ -44,8 +49,8 @@
 #   is important, not the name.
 #	Why batch it? you don't want your computer going to sleep during a ssh long task.
 #	START WITH A TEST DATASET FIRST! MAKE SURE YOU HAVE THINGS CORRECT!!!
-#	Then copy, rename, and edit the copy, change the few places necessary to backup your real data.
-#	This script can be added to cron tasks or enter it via the batch command
+#	Then copy/rename, and edit the copy, change the few places necessary to backup your real data.
+#	This script can be added to cron tasks or enter it via the batch command (if it takes a while)
 #	followed by the complete script filename.
 #	Also notice the sanity check; it lists and finds files in the test dataset
 #	and echos back what it finds. If you don't see what you expect, start investigating
