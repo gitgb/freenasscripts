@@ -22,3 +22,4 @@ Because it can work with several destination pools, one can leave one destinatio
 https://github.com/gitgb/freenasscripts
 ###SEE ALSO
 The man pages for all of the zfs commands used in this script.
+The script is faily well documented as well.
