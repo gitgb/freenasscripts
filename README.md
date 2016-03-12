@@ -11,7 +11,7 @@ rz2datazfssnapup.sh
 ###SYNOPSIS
  ./path/testzfssnapup.sh [backup]
 ###DESCRIPTION
-Will snapshot the dataset recursively, then send an incremental replication stream to an attached backup pool of several backup pools, providing a backup of that dataset on a different pool(s). It will not do anything if the dataset has an old snapshot named   -backup.olddelete, which should be destroyed and then one can re-run the script. The optional parameter "backup" will do this in one invocation. It also sends its output to a log file, for a record of what happened.
+Will snapshot the dataset recursively, then send an incremental replication stream to an attached backup pool of several backup pools, providing a backup of that dataset on a different pool(s). It will not do anything if the dataset has an old snapshot named   -backup.olddelete. (This prevents a cron job from running wild.) This oldest dataset can be destroyed and then one can re-run the script. The optional parameter "backup" will do this in one invocation. It also sends its output to a log file, for a record of what happened.
 ###NOTES
 This can be used in several ways. The script must be read, and edited. The script has instructions on how to set up the destination pool.
 
