@@ -185,7 +185,7 @@ echo ""
 echo "Now SANITY check for files in tree below, as sometimes there are no files:"
 echo "(Sometimes a DETACH / ATTACH pool cycle will restore the files. Huh? Why?)"
 echo "You could ls -l FavoriteDirctory | wc ; and see how many files exist. Change below to match"
-echo "Better be some ~30 below "
+echo "Better be > 30 below "
 echo "ls /mnt/$DESTPOOL/data/gb | /usr/bin/wc"
 ls /mnt/$DESTPOOL/data/gb | /usr/bin/wc
 echo "Listing of snapshots we have:"

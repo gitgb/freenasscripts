@@ -185,10 +185,11 @@ echo ""
 echo "Now SANITY check for files in tree below, as sometimes there are no files:"
 echo "(Sometimes a DETACH / ATTACH pool cycle will restore the files. Huh? Why?)"
 echo "You could ls -l FavoriteDirctory | wc ; and see how many files exist. Change below to match"
-echo "Better be 3 below "
+echo "Better be >= 3 below "
 echo "ls /mnt/$DESTPOOL/test/datas1 | /usr/bin/wc"
 ls /mnt/$DESTPOOL/test/datas1 | /usr/bin/wc
-echo "I think there were about 123 files under test, are there still?"
+echo "below 2 lines extra for this testzfs file"
+echo "I think there were > 123 files under test, are there still? Files number:"
 /usr/bin/find /mnt/$DESTPOOL/test | /usr/bin/wc
 echo "Listing of snapshots we have:"
 /sbin/zfs list -r -t snapshot -o creation,space $DESTPOOL $SRCPOOL
