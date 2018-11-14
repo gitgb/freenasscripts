@@ -1,10 +1,10 @@
 #!/bin/sh          
 # 
 # FUNCTIONAL AREA OR ABSTRACT: (Shouldn't I use Perl ;>)
-# 	power down script, init by freenas no power.
+# 	A script that freenas system should run prior to shutting itself down.
 # 
 # ENVIRONMENT/PROJECT:
-# 	freenas controls power shutdown of other servers
+# 	freenas controls power shutdown of other servers, server followed by router 
 # 
 # MODIFIED BY:
 # VERS	DATE		AUTH.	REASON
@@ -51,10 +51,12 @@ amiroot () { #well ?
 #powerdown ALL=(ALL) /sbin/shutdown, /sbin/reboot
 ssh powerdown@lserver sudo /sbin/shutdown -p now
 
-sleep 15
+# wait a few seconds for lserver to cleanup, shutdown
+sleep 30
 
 # Next halt the router:
 ssh powerdown@router sudo /etc/rc.halt
+sleep 10
 
 exit
 
