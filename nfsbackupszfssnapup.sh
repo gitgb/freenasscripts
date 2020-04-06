@@ -91,7 +91,7 @@ exit 1
 # Added multi backup disk pools. Keep one disk-pool local to be backed up; then swap 
 # with the other offsite. If only one disk-pool its ok too, it will ignore the second pool name
 
-POOLLIST="offsite OffsiteB"
+POOLLIST="offsite OffsiteB OffsiteC"
 SRCPOOL="rz2/nfs/backups"
 LOGFILE="/var/log/zfssnapup.log"
 # should clear occasionaly cp /dev/null to zfssnapup.log
